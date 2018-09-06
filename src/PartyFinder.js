@@ -14,9 +14,7 @@ export default class PartyFinder extends React.Component {
       res: {
         data: ''
       },
-      users: {
-
-      }
+      users: {}
     }
   }
 
@@ -28,10 +26,10 @@ export default class PartyFinder extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault()
     this.getHeroData()
-    let users = this.state.res.data
-    for (let key in (users)) {
-      key = Math.round(users[key] / 200)
-    }
+    // let users = this.state.res.data
+    // for (let key in (users)) {
+    //   key = Math.round(users[key] / 200)
+    // }
     console.log("submit")
   }
 
@@ -50,6 +48,7 @@ export default class PartyFinder extends React.Component {
     const userData = this.state.res.data
     console.log(users)
     if(userData) {
+      console.log('its happening')
       return (
         <div className="party-finder">
           <Party usersData={userData} />
@@ -60,16 +59,17 @@ export default class PartyFinder extends React.Component {
           </form>
         </div>
       )
-    } else 
-    return (
-      <div className="party-finder">
-        <Party usersData={userData}/>
-        <form onSubmit={this.handleSubmit}>
-          <input name="owner" placeholder="Owner of Repo" onChange={this.update} type="text"/>
-          <input name="repoName" placeholder="Name of the repo" onChange={this.update} type="text"/>
-          <button>Gather Party</button>
-        </form>
-      </div>
-    )
+    } else {
+      return (
+        <div className="party-finder">
+          <Party usersData={userData}/>
+          <form onSubmit={this.handleSubmit}>
+            <input name="owner" placeholder="Owner of Repo" onChange={this.update} type="text"/>
+            <input name="repoName" placeholder="Name of the repo" onChange={this.update} type="text"/>
+            <button>Gather Party</button>
+          </form>
+        </div>
+      )
+    }
   }
 }
