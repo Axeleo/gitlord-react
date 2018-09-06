@@ -1,6 +1,9 @@
 import React from "react";
 import axios from 'axios';
+import Party from './Party'
 
+
+// No need for this to be a component right now
 export default class PartyFinder extends React.Component {
 
   constructor() {
@@ -8,7 +11,12 @@ export default class PartyFinder extends React.Component {
     this.state = {
       owner: '',
       repoName: '',
-      res: {}
+      res: {
+        data: ''
+      },
+      users: {
+
+      }
     }
   }
 
@@ -17,31 +25,50 @@ export default class PartyFinder extends React.Component {
     this.setState({[name]: value})
   }
 
-  handleSubmit = () => {
+  handleSubmit = (event) => {
+    event.preventDefault()
     this.getHeroData()
+    let users = this.state.res.data
+    for (let key in (users)) {
+      key = Math.round(users[key] / 200)
+    }
     console.log("submit")
   }
 
   getHeroData = () => {
-    axios.get("https://gitlord-node.herokuapp.com/heros", { params: { owner: this.state.owner, reponame: this.state.reponame}})
-      .then(res => {
-        this.setState({res: res})
-        console.log(res);
+    console.log("hero")
+    axios.get("https://gitlord-node.herokuapp.com/heros", 
+      { params: { owner: this.state.owner, repoName: this.state.repoName}})
+        .then(res => {
+          this.setState({res: res})
+            console.log(res);
       });
   }
 
   render(){
-    var resKeys = Object.keys(this.state.res);
+    const users = Object.keys(this.state.res.data);
+    const userData = this.state.res.data
+    console.log(users)
+    if(userData) {
+      return (
+        <div className="party-finder">
+          <Party usersData={userData} />
+          <form onSubmit={this.handleSubmit}>
+            <input name="owner" placeholder="Owner of Repo" onChange={this.update} type="text" />
+            <input name="repoName" placeholder="Name of the repo" onChange={this.update} type="text" />
+            <button>Gather Party</button>
+          </form>
+        </div>
+      )
+    } else 
     return (
-      <div>
+      <div className="party-finder">
+        <Party usersData={userData}/>
         <form onSubmit={this.handleSubmit}>
           <input name="owner" placeholder="Owner of Repo" onChange={this.update} type="text"/>
           <input name="repoName" placeholder="Name of the repo" onChange={this.update} type="text"/>
           <button>Gather Party</button>
         </form>
-        <div>{resKeys.map(user => {
-          <div>{user}</div>
-        })}</div>
       </div>
     )
   }
